@@ -3,7 +3,6 @@ import { useState } from "react";
 import styles from "../styles/Home.module.css";
 import 'bootstrap/dist/css/bootstrap.css'
 import axios from "axios";
-import Link from 'next/link';
 
 export default function Home() {
   const [token, setToken] = useState("");
@@ -11,8 +10,9 @@ export default function Home() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  
 
-  function getDalle2() {
+  function getGenerateImage() {
     if (token != "" && query != "") {
       setError(false);
       setLoading(true);
@@ -33,21 +33,8 @@ export default function Home() {
 
   const [type, setType] = useState("webp");
 
-  function download(url) {
-    axios
-      .post(`/api/download`, { url: url, type: type })
-      .then((res) => {
-        const link = document.createElement("a");
-        link.href = res.data.result;
-        link.download = `${query}.${type.toLowerCase()}`;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   return (
+    
     <div className={styles.container}>
       <Head>
         <title>Create DALLE 2 App</title>
@@ -74,7 +61,7 @@ export default function Home() {
           />
           {"  "}
           <br></br>
-          <button className="btn btn-danger btn-lg w-100" onClick={getDalle2}>Generate</button>
+          <button className="btn btn-danger btn-lg w-100" onClick={getGenerateImage}>Generate</button>
         </p>
         {error ? ( <div className={styles.error}>Something went wrong. Try again.</div> ) : ( <></> )}
         {loading && <p>Loading...</p>}
@@ -94,4 +81,6 @@ export default function Home() {
       </main>
     </div>
   );
+
 }
+
