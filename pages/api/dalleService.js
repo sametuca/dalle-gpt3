@@ -1,9 +1,4 @@
 import { Dalle } from "dalle-node";
-import Link from 'next/link';
-import NextNProgress from 'nextjs-progressbar';
-import * as NProgress from 'nprogress';
-import Router from "next/router";
-
 
 export default async function handler(req, res) {
   NProgress.start();
