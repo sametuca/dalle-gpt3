@@ -10,9 +10,37 @@ export default function Home() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  
 
-  function getGenerateImage() {
+  function translateEnToTrInputValue() {
+    const axios = require("axios");
+
+    const encodedParams = new URLSearchParams();
+    encodedParams.append("q", query);
+    encodedParams.append("target", "tr");
+    encodedParams.append("source", "en");
+
+    const options = {
+      method: 'POST',
+      url: 'https://google-translate1.p.rapidapi.com/language/translate/v2',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept-Encoding': 'application/gzip',
+        'X-RapidAPI-Key': '92cf1834c1mshf1c50c69a132d57p1a84c7jsn2906866ffae6',
+        'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+      },
+      data: encodedParams
+    };
+
+    axios.request(options).then(function (response) {
+      console.log(response.data);
+      var responseData = response.data.translations[0].translatedText;
+      getGenerateImage(responseData);
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
+
+  function getGenerateImage(query) {
     if (token != "" && query != "") {
       setError(false);
       setLoading(true);
@@ -34,7 +62,7 @@ export default function Home() {
   const [type, setType] = useState("webp");
 
   return (
-    
+
     <div className={styles.container}>
       <Head>
         <title>Create DALLE 2 App</title>
@@ -44,12 +72,12 @@ export default function Home() {
           Create images with <span className={styles.titleColor}>DALLE 2</span>
         </h1>
         <p className={styles.description}>
-          <input 
-          id="token"
-          className="form-control form-control-lg" 
-          type="text" 
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="Token">
+          <input
+            id="token"
+            className="form-control form-control-lg"
+            type="text"
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="Token">
           </input>
           <input
             id="query"
@@ -61,9 +89,9 @@ export default function Home() {
           />
           {"  "}
           <br></br>
-          <button className="btn btn-danger btn-lg w-100" onClick={getGenerateImage}>Generate</button>
+          <button className="btn btn-danger btn-lg w-100" onClick={translateEnToTrInputValue}>Generate</button>
         </p>
-        {error ? ( <div className={styles.error}>Something went wrong. Try again.</div> ) : ( <></> )}
+        {error ? (<div className={styles.error}>Something went wrong. Try again.</div>) : (<></>)}
         {loading && <p>Loading...</p>}
         <div className={styles.grid}>
           {results.map((result) => {
