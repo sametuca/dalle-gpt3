@@ -15,14 +15,24 @@ export default function Home() {
   async function getGenerateImage() {
     var translatePromise = new Promise(function(resolve, reject) {
       setLoading(true);
-      translate(query, {to: 'en'}).then(res => {
-        setQuery(res.text);
-        resolve(res.text);
-      }).catch(err => {
-        reject(err);
-        setLoading(false);
-      });
+      try {
+        translate(query, {to: 'en'}).then(res => {
+          setQuery(res.text);
+          resolve(res.text);
+        }).catch(err => {
+          reject(err);
+          setError("Çevirme işlemi ile ilgili bir problem oluştu.");
+          setLoading(false);
+        });
+      } catch (e) {
+        if (e.name === 'TooManyRequestsError') {
+          setError("Çok fazla işlem yaptınız. Lütfen daha sonra tekrar deneyin.");
+          setLoading(false);
+        }
+      }
     }
+
+
     );
     translatePromise.then(function(translatedText) {
       setLoading(true);
@@ -33,7 +43,7 @@ export default function Home() {
           setLoading(false);
         }).catch(function(err) {
       console.log(err);
-      setError(true);
+      setError("Token kullanılamaz durumda");
       setLoading(false);
     });
   });
@@ -43,7 +53,7 @@ export default function Home() {
     
     <div className={styles.container}>
       <Head>
-        <title>OPENAI Dalle-2</title>
+        <title>OPENAI Dalle-2 Image Generator</title>
       </Head>
       <main className={styles.main}>
         <p className={styles.description}>
@@ -84,7 +94,8 @@ export default function Home() {
           })}
         </div>
         <div className={styles.footer}>
-        <a href="">sametuca-github</a>
+        <a href="https://github.com/sametuca" className="fa fa-twitter">sametuca</a>
+        <a href="#" class="fa fa-rss"></a>
         </div>
       </main>
     </div>
