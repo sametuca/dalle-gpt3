@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Index.module.css";
 import 'bootstrap/dist/css/bootstrap.css'
 import axios from "axios";
 import { translate } from '@vitalets/google-translate-api';
@@ -40,15 +40,12 @@ export default function Home() {
 }
 
   return (
-
+    
     <div className={styles.container}>
       <Head>
         <title>OPENAI Dalle-2</title>
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          DALLE-2 <span className={styles.titleColor}>ile Resim Çizdir</span>
-        </h1>
         <p className={styles.description}>
           <input
             id="token"
@@ -69,10 +66,7 @@ export default function Home() {
           <br></br>
           <button className="btn btn-danger btn-lg w-100" onClick={getGenerateImage}>Çizdir</button>
           <a href="" className="btn btn-dark btn-lg w-100 mt-2">Token Nasıl Alınır?</a>
-          <div>
           <br></br>
-          <a href="" className="text">sametuca-github</a>
-          </div>
         </p>
         {error ? (<div className={styles.error}>Bir şeyler yanlış gitti. Tekrar deneyiniz</div>) : (<></>)}
         {loading && <p>Loading...</p>}
@@ -88,6 +82,9 @@ export default function Home() {
               </div>
             );
           })}
+        </div>
+        <div className={styles.footer}>
+        <a href="">sametuca-github</a>
         </div>
       </main>
     </div>

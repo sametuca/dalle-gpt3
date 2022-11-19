@@ -1,7 +1,7 @@
 .container {
     padding: 0 2rem;
   }
-  
+
   .main {
     min-height: 100vh;
     padding: 4rem 0;
@@ -30,28 +30,7 @@
     align-items: center;
     flex-grow: 1;
   }
-  
-  .titleColor {
-    color: #dc3545;
-  }
-  
-  .title {
-    margin: 0;
-    line-height: 1.15;
-    font-size: 4rem;
-  }
-  
-  .title,
-  .description {
-    text-align: center;
 
-  }
-  
-  .description {
-    margin: 3rem 0;
-    line-height: 1.5;
-    font-size: 1.5rem;
-  }
   .query::placeholder {
     font-weight: bold;
     opacity: .5;
@@ -122,12 +101,6 @@
     font-size: 1.25rem;
     line-height: 1.5;
   }
-  
-  .logo {
-    height: 1em;
-    margin-left: 0.5rem;
-  }
-  
   @media (max-width: 600px) {
     .grid {
       width: 100%;
