@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "../styles/Home.module.css";
 import 'bootstrap/dist/css/bootstrap.css'
 import axios from "axios";
+import { translate } from '@vitalets/google-translate-api';
 
 export default function Home() {
   const [token, setToken] = useState("");
@@ -11,73 +12,50 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  function translateEnToTrInputValue() {
-    const axios = require("axios");
-
-    const encodedParams = new URLSearchParams();
-    encodedParams.append("q", query);
-    encodedParams.append("target", "tr");
-    encodedParams.append("source", "en");
-
-    const options = {
-      method: 'POST',
-      url: 'https://google-translate1.p.rapidapi.com/language/translate/v2',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-        'Accept-Encoding': 'application/gzip',
-        'X-RapidAPI-Key': '92cf1834c1mshf1c50c69a132d57p1a84c7jsn2906866ffae6',
-        'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
-      },
-      data: encodedParams
-    };
-
-    axios.request(options).then(function (response) {
-      console.log(response.data);
-      var responseData = response.data.translations[0].translatedText;
-      getGenerateImage(responseData);
-    }).catch(function (error) {
-      console.error(error);
-    });
-  }
-
-  function getGenerateImage(query) {
-    if (token != "" && query != "") {
-      setError(false);
+  async function getGenerateImage() {
+    var translatePromise = new Promise(function(resolve, reject) {
+      setLoading(true);
+      translate(query, {to: 'en'}).then(res => {
+        setQuery(res.text);
+        resolve(res.text);
+      }).catch(err => {
+        reject(err);
+        setLoading(false);
+      });
+    }
+    );
+    translatePromise.then(function(translatedText) {
       setLoading(true);
       axios
-        .post(`/api/dalleService?k=${token}&q=${query}`)
+        .post(`/api/dalleService?k=${token}&q=${translatedText}`)
         .then((res) => {
           setResults(res.data.result);
           setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          setError(true);
-        });
-    } else {
+        }).catch(function(err) {
+      console.log(err);
       setError(true);
-    }
-  }
-
-  const [type, setType] = useState("webp");
+      setLoading(false);
+    });
+  });
+}
 
   return (
 
     <div className={styles.container}>
       <Head>
-        <title>Create DALLE 2 App</title>
+        <title>OPENAI Dalle-2</title>
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Create images with <span className={styles.titleColor}>DALLE 2</span>
+          DALLE-2 <span className={styles.titleColor}>ile Resim Çizdir</span>
         </h1>
         <p className={styles.description}>
           <input
             id="token"
-            className="form-control form-control-lg"
+            className="form-control form-control-lg mb-2"
             type="text"
             onChange={(e) => setToken(e.target.value)}
-            placeholder="Token">
+            placeholder="Size ait olan Token">
           </input>
           <input
             id="query"
@@ -85,13 +63,18 @@ export default function Home() {
             className="form-control form-control-lg"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Query"
+            placeholder="Bir tanım yapınız"
           />
           {"  "}
           <br></br>
-          <button className="btn btn-danger btn-lg w-100" onClick={translateEnToTrInputValue}>Generate</button>
+          <button className="btn btn-danger btn-lg w-100" onClick={getGenerateImage}>Çizdir</button>
+          <a href="" className="btn btn-dark btn-lg w-100 mt-2">Token Nasıl Alınır?</a>
+          <div>
+          <br></br>
+          <a href="" className="text">sametuca-github</a>
+          </div>
         </p>
-        {error ? (<div className={styles.error}>Something went wrong. Try again.</div>) : (<></>)}
+        {error ? (<div className={styles.error}>Bir şeyler yanlış gitti. Tekrar deneyiniz</div>) : (<></>)}
         {loading && <p>Loading...</p>}
         <div className={styles.grid}>
           {results.map((result) => {
