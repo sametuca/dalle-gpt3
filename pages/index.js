@@ -50,7 +50,6 @@ export default function Home() {
 }
 
   return (
-    
     <div className={styles.container}>
       <Head>
         <title>OPENAI Dalle-2 Image Generator</title>
